@@ -1,0 +1,18 @@
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+    grid-template-rows: 1fr 1fr;    /* 2 rows */
+    gap: 10px;                      /* space between items */
+    width: fit-content;
+    height: fit-content;
+  }
+
+.item {
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20rem;
+    width: 20rem;
+}
