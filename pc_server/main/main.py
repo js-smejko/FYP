@@ -1,17 +1,10 @@
 # from zmq_capture import LatestResults
 from capture import LatestResults
 from tracking import Track3D, Track2D
-from calibration import CameraCalibrator
 from output import HLSEncoder, FPSCounter
-import time
 import cv2
-from datetime import datetime
-import numpy as np
 from server import app, WebSocketServer
 import threading
-# from categorise import RelationalData
-import random
-from triangulate import PointTriangulation
 
 # Resolution of incoming images
 RESOLUTION = (640, 640)
@@ -27,15 +20,16 @@ def main():
     # ], RESOLUTION)
     # Uncomment if using GStreamer capture
     cap = LatestResults()
-    calibrator = CameraCalibrator(RESOLUTION)
-    tracker = Track3D(calibrator, 2)
+    # calibrator = CameraCalibrator(RESOLUTION)
+    tracker = Track3D(TANK, 2)
     track2D = Track2D()
     # dataset_builder = MultiImageWriter(0, 100)
     encoders = [HLSEncoder(RESOLUTION, dir) for dir in 
-                ["C:/Development/Project/var/www/html/deep", "C:/Development/Project/var/www/html/wide"]]
+                ["C:/Development/Project/var/www/html/deep", 
+                 "C:/Development/Project/var/www/html/wide"]]
     websockets = WebSocketServer()
     fps = FPSCounter()
-    point_triangulation = PointTriangulation(TANK)
+    # point_triangulation = PointTriangulation(TANK)
     # RelationalData(tracker)
 
     cap.start()
@@ -71,7 +65,7 @@ def main():
         if tracks_2d is None or tracks_2d[0] is None or tracks_2d[1] is None:
             continue
 
-        calibrator.show([result.orig_img for result in results])
+        # calibrator.show([result.orig_img for result in results])
 
         # dataset_builder.offer_for_write([result.orig_img for result in results])
 
@@ -80,7 +74,7 @@ def main():
         if tracks_3d is None or tracks_3d.empty:
             continue
 
-        tracks_3d = point_triangulation.triangulate_points(tracks_3d)
+        # tracks_3d = point_triangulation.triangulate_points(tracks_3d)
 
         websockets.send_data({
             "scatter": [
